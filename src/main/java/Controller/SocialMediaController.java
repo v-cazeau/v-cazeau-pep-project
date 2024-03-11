@@ -2,7 +2,10 @@ package Controller;
 
 import static org.mockito.Mockito.lenient;
 
+import java.util.Map;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Model.Account;
@@ -36,7 +39,7 @@ public class SocialMediaController {
         Javalin app = Javalin.create();
         app.get("/accounts/{account_id}", this::getAllMessagesFromUserHandler);
         app.post("/register", this::postAccountHandler);
-        app.post("login", this::postLoginHandler);
+        app.post("/login", this::postLoginHandler);
         app.get("/messages", this::getAllMessagesHandler);
         app.get("/messages/{message_id}", this::getAllMessagesByIdHandler);
         app.post("/messages", this::postMessageHandler); 
@@ -50,8 +53,75 @@ public class SocialMediaController {
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
   
+    private void getAllMessagesFromUserHandler(Context ctx){
+        List<User> users = accountService.getAllMessagesFromUser();
+        ctx.json(users);
+    }
+    
+    private void postAccountHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Account account = mapper.readValue(ctx.body(), Account.class);
+        Account addedAccount = accountService.addAccount(account); 
+        if(addedAccount != null) {
+            ctx.status(200); 
+        }else{
+            ctx.status(400);
+        }
+    }
 
+    private void postLoginHandler(Context ctx) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        Account account = mapper.readValue(ctx.body(), Account.class);
+        Account addedAccount = accountService.addAccount(account); 
+        if(addedAccount == username && password) {
+            ctx.status(200); 
+        }else{
+            ctx.status(401);
+        }
+    }
 
+    private void getAllMessagesHandler(Context ctx) {
+        List<Message> messages = messageService.getAllMessages(); 
+        ctx.json(messages);
+    }
+
+    private void getAllMessagesByIdHandler(Context ctx ) {
+        ctx.json(messageService.getAllMessagesById());
+    }
+
+    private void postMessageHandler(Context ctx) {
+        ObjectMapper mapper = new ObjectMapper();
+        Message message = mapper.readValue(ctx.body(), Message.class); 
+        Message addedMessage = messageService.addedMessage(message);
+        if (addedMessage != null) {
+            ctx.status(200);
+        } else {
+            ctx.status(400);
+        }
+    }
+
+    private void patchMessageHandler(Context ctx) {
+        int messageId = Integer.parseInt(ctx.pathParam("message_id"));
+        ObjectMapper mapper = new ObjectMapper(); 
+        Map<String, String> updateFields = mapper.readValue(ctx.body(), new TypeReference<Map<String,String>>(){});
+        String newMessageText = updateFields.get("message_text");
+
+        if (newMessageText == null || newMessageText.isBlank() || newMessageText.length() > 255) {
+            ctx.status(400);
+        }
+        
+        Message updatedMessage = messageService.updateMessageTextById(messageId, newMessageText);
+
+        if(updatedMessage != null){
+            ctx.json(updatedMessage);
+        } else {
+            ctx.status(400);
+        }
+    }
+    
+    private void deleteMessageHandler(Context ctx) {
+        ctx.json(messageService.deleteMessage()); 
+    }
     // private void exampleHandler(Context context) {
     //     context.json("sample text");
     // }
