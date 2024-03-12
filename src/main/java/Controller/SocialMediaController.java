@@ -54,7 +54,7 @@ public class SocialMediaController {
      */
   
     private void getAllMessagesFromUserHandler(Context ctx){
-        List<User> users = accountService.getAllMessagesFromUser();
+        List<User> users = accountService.getAllMessagesFromUser(); //change to posted_by?
         ctx.json(users);
     }
     
@@ -71,7 +71,7 @@ public class SocialMediaController {
 
     private void postLoginHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
-        Account account = mapper.readValue(ctx.body(), Account.class);
+        Account account = mapper.readValue(ctx.body(), Account.class); //would it be add username or no b/c that's within my if statement? My guess is yes add username. 
         Account addedAccount = accountService.addAccount(account); 
         if(addedAccount == username && password) {
             ctx.status(200); 
@@ -81,7 +81,7 @@ public class SocialMediaController {
     }
 
     private void getAllMessagesHandler(Context ctx) {
-        List<Message> messages = messageService.getAllMessages(); 
+        List<Message> messages = messageService.getAllMessages(); //change to message_text?
         ctx.json(messages);
     }
 
@@ -91,7 +91,7 @@ public class SocialMediaController {
 
     private void postMessageHandler(Context ctx) {
         ObjectMapper mapper = new ObjectMapper();
-        Message message = mapper.readValue(ctx.body(), Message.class); 
+        Message message = mapper.readValue(ctx.body(), Message.class); //change to message_text?
         Message addedMessage = messageService.addedMessage(message);
         if (addedMessage != null) {
             ctx.status(200);
@@ -101,7 +101,7 @@ public class SocialMediaController {
     }
 
     private void patchMessageHandler(Context ctx) {
-        int messageId = Integer.parseInt(ctx.pathParam("message_id"));
+        int messageId = Integer.parseInt(ctx.pathParam("message_id")); //change variable to message_id?
         ObjectMapper mapper = new ObjectMapper(); 
         Map<String, String> updateFields = mapper.readValue(ctx.body(), new TypeReference<Map<String,String>>(){});
         String newMessageText = updateFields.get("message_text");
@@ -120,7 +120,7 @@ public class SocialMediaController {
     }
     
     private void deleteMessageHandler(Context ctx) {
-        ctx.json(messageService.deleteMessage()); 
+        ctx.json(messageService.deleteMessage()); //add message_text within parenthesis?
     }
     // private void exampleHandler(Context context) {
     //     context.json("sample text");
