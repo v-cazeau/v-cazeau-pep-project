@@ -22,13 +22,15 @@ public class MessageService {
         return this.messageDAO.getAllMessagesById(0);
     }
 
-    public Message addMessage() {
-        Message existingMessage =  this.messageDAO.postMessage(getAllMessagesById());
-        if (existingMessage != null) {
+    public Message addMessage(Message message) {
+        // Message existingMessage =  this.messageDAO.postMessage(message);
+        if (message.message_text == null) {
             return null; 
-        } else {
-            return messageDAO.postMessage(existingMessage);
+        } 
+        if (message.message_text == "" || message.getMessage_text().length() > 255) {
+            return null; 
         }
+        return this.messageDAO.postMessage(message);
     }
 
     public Message updateMessage(int message_id, Message message) {

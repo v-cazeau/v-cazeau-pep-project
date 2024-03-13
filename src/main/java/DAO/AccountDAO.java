@@ -49,9 +49,9 @@ public class AccountDAO {
             preparedStatement.setString(2, account.getPassword()); 
 
             preparedStatement.executeUpdate();
-            ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
-            if(pkeyResultSet.next()) {
-                int generated_account_key = (int) pkeyResultSet.getInt(1);
+            ResultSet rs = preparedStatement.getGeneratedKeys();
+            if(rs.next()) {
+                int generated_account_key = (int) rs.getInt(1);
                 return new Account(generated_account_key, account.getUsername(), account.getPassword());
             }
             
