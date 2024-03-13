@@ -14,28 +14,6 @@ import java.util.*;
 
 public class AccountDAO {
 
-    //Retrieve all posts by User
-
-    public List<Account> getAllMessagesFromUser() {
-        Connection connection = ConnectionUtil.getConnection();
-        List<Account> accounts = new ArrayList<>();
-
-        try {
-            String sql = "SELECT * FROM account WHERE username = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            ResultSet rs = preparedStatement.executeQuery();
-            while (rs.next()) {
-                Account account = new Account();
-                accounts.add(account);
-            }
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage()); //is this supposed to be message? 
-        }
-        return null;
-
-    }
-
     //Create a new account
     
     public Account postAccount(Account account) {

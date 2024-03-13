@@ -53,7 +53,7 @@ public class SocialMediaController {
      */
     public Javalin startAPI() {
         Javalin app = Javalin.create();
-        // app.get("/accounts/{account_id}", this::getAllMessagesFromUserHandler);
+        app.get("/accounts/{account_id}", this::getAllMessagesFromUserHandler);
         app.post("/register", this::postAccountHandler);
         app.post("/login", this::postLoginHandler);
         app.get("/messages", this::getAllMessagesHandler);
@@ -69,10 +69,16 @@ public class SocialMediaController {
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
   
-    // private void getAllMessagesFromUserHandler(Context ctx){
-    //     List<User> users = accountService.getAllMessagesFromUser(); //change to posted_by?
-    //     ctx.json(users);
-    // }
+    private void getAllMessagesFromUserHandler(Context ctx){
+        int posted_id = Integer.parseInt(ctx.pathParam("account_id"));
+        List<Message> message = messageService.getAllMessagesFromUser(posted_id);
+        ctx.json(message);
+        if (message != null) {
+            ctx.json(message);
+        } else {
+            ctx.json("");
+        }
+    }
     
     private void postAccountHandler(Context ctx) {
         Account account = ctx.bodyAsClass(Account.class);

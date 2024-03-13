@@ -14,6 +14,10 @@ public class MessageService {
         messageDAO = new MessageDAO();
     }
     
+    public List<Message> getAllMessagesFromUser(int posted_by) {
+        return this.messageDAO.getAllMessagesFromUser(posted_by);
+    }
+
     public List<Message> getAllMessages() {
         return this.messageDAO.getAllMessages();
     }
@@ -34,15 +38,15 @@ public class MessageService {
         return this.messageDAO.postMessage(message);
     }
 
-    public Message updateMessage(int message_id, Message message) {
-        Message updated_message = this.messageDAO.getAllMessagesById(message_id);
-        if (updated_message != null) {
-            this.messageDAO.patchMessage(message_id, message);
-            return updated_message;
-        } else {
-            return null;
-        }
-    }
+    // public Message updateMessage(int message_id, Message message) {
+    //     Message updated_message = this.messageDAO.getAllMessagesById(message_id);
+    //     if (updated_message != null) {
+    //         this.messageDAO.patchMessage(message_id, message);
+    //         return updated_message;
+    //     } else {
+    //         return null;
+    //     }
+    // }
 
     public Message deleteMessage(int message_id) {
         Message message = messageDAO.getAllMessagesById(message_id);

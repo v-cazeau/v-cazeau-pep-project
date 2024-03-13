@@ -3,7 +3,7 @@ package Service;
 import Model.Account;
 import DAO.AccountDAO;
 
-import java.util.*;
+// import java.util.*;
 
 public class AccountService {
 
@@ -15,10 +15,6 @@ public class AccountService {
 
     public void AccountDAO(AccountDAO accountDAO) {
         this.accountDAO = accountDAO; 
-    }
-
-    public List<Account> getAllMessagesFromUser() {
-        return this.accountDAO.getAllMessagesFromUser();
     }
     
     public Account insertAccount(Account account) {

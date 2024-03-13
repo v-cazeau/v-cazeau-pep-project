@@ -16,6 +16,34 @@ import java.util.*;
 
 public class MessageDAO {
 
+    //Retrieve all posts by user
+    
+    public List<Message> getAllMessagesFromUser(int posted_by) {
+        Connection connection = ConnectionUtil.getConnection();
+        List<Message> messages = new ArrayList<>();
+
+        try {
+            String sql = "SELECT * FROM message WHERE posted_by = ?"; 
+            PreparedStatement preparedStatement = connection.prepareStatement(sql); 
+
+            preparedStatement.setInt(1, posted_by);
+
+            ResultSet rs = preparedStatement.executeQuery(); 
+
+            while (rs.next()) {
+                Message message = new Message(rs.getInt("message_id"), 
+                                rs.getInt("posted_by"), 
+                                rs.getString("message_text"), 
+                                rs.getLong("time_posted_epoch")); 
+                messages.add(message); 
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return messages; 
+    }
+
     //Retrieve all messages
 
     public List<Message> getAllMessages() {
@@ -93,25 +121,25 @@ public class MessageDAO {
 
     //Partially update a Message
 
-    public Message patchMessage(int posted_by, String message_text, int time_posted_epoch) {
-        Connection connection = ConnectionUtil.getConnection();
+    // public Message patchMessage(int posted_by, String message_text, int time_posted_epoch) {
+    //     Connection connection = ConnectionUtil.getConnection();
 
-        try {
-            String sql = "UPDATE message SET posted_by = ?, message_text = ?, time_posted_epoch = ? SET message_id = ?";
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    //     try {
+    //         String sql = "UPDATE message SET posted_by = ?, message_text = ?, time_posted_epoch = ? SET message_id = ?";
+    //         PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-            preparedStatement.setInt(1, posted_by);
-            preparedStatement.setString(2, message_text);
-            preparedStatement.setInt(3, time_posted_epoch);
-            preparedStatement.setInt(4, message_id);
+    //         preparedStatement.setInt(1, posted_by);
+    //         preparedStatement.setString(2, message_text);
+    //         preparedStatement.setInt(3, time_posted_epoch);
+    //         preparedStatement.setInt(4, message_id);
 
-            preparedStatement.executeUpdate();
-            return patchMessage(0, 0, null, 0);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
-    }
+    //         preparedStatement.executeUpdate();
+    //         return patchMessage(0, 0, null, 0);
+    //     } catch (SQLException e) {
+    //         System.out.println(e.getMessage());
+    //     }
+    //     return null;
+    // }
 
     //Delete a message
     public void deleteMessage(int message_id) {
@@ -129,6 +157,6 @@ public class MessageDAO {
         }
     }
 
-    public void patchMessage(int message_id, Message message) {
-    } //is this needed? this was updated from MessageService to correct patchMessage
+    // public void patchMessage(int message_id, Message message) {
+    // } //is this needed? this was updated from MessageService to correct patchMessage
 }
