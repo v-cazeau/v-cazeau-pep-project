@@ -56,7 +56,7 @@ public class SocialMediaController {
         // app.get("/accounts/{account_id}", this::getAllMessagesFromUserHandler);
         app.post("/register", this::postAccountHandler);
         app.post("/login", this::postLoginHandler);
-        // app.get("/messages", this::getAllMessagesHandler);
+        app.get("/messages", this::getAllMessagesHandler);
         // app.get("/messages/{message_id}", this::getAllMessagesByIdHandler);
         app.post("/messages", this::postMessageHandler); 
         // app.patch("/messages/{message_id}", this::patchMessageHandler);
@@ -94,14 +94,14 @@ public class SocialMediaController {
         }
     }
 
-    // private void getAllMessagesHandler(Context ctx) {
-    //     List<Message> messages = messageService.getAllMessages(); //change to message_text?
-    //     ctx.json(messages);
-    // }
+    private void getAllMessagesHandler(Context ctx) {
+        List<Message> messages = messageService.getAllMessages(); //change to message_text?
+        ctx.json(messages);
+    }
 
-    // private void getAllMessagesByIdHandler(Context ctx ) {
-    //     ctx.json(messageService.getAllMessagesById());
-    // }
+    private void getAllMessagesByIdHandler(Context ctx ) {
+        ctx.json(messageService.getAllMessagesById());
+    }
 
     private void postMessageHandler(Context ctx) {
         Message message = ctx.bodyAsClass(Message.class);
