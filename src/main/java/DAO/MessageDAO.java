@@ -114,7 +114,7 @@ public class MessageDAO {
     }
 
     //Delete a message
-    public Message deleteMessage(int message_id) {
+    public void deleteMessage(int message_id) {
         Connection connection = ConnectionUtil.getConnection();
 
         try {
@@ -124,11 +124,9 @@ public class MessageDAO {
             preparedStatement.setInt(1, message_id);
 
             preparedStatement.executeUpdate();
-            return deleteMessage(0); 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return null;
     }
 
     public void patchMessage(int message_id, Message message) {

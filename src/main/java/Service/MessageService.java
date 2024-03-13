@@ -20,6 +20,7 @@ public class MessageService {
 
     public Message getAllMessagesById(int message_id) {
         return this.messageDAO.getAllMessagesById(message_id);
+
     }
 
     public Message addMessage(Message message) {
@@ -43,7 +44,12 @@ public class MessageService {
         }
     }
 
-    public Message deleteMessage(){
-        return this.messageDAO.deleteMessage(0);
+    public Message deleteMessage(int message_id) {
+        Message message = messageDAO.getAllMessagesById(message_id);
+        if (message == null) {
+            return null; 
+        }
+        this.messageDAO.deleteMessage(message_id);
+        return message;
     }
 }

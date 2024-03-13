@@ -60,7 +60,7 @@ public class SocialMediaController {
         app.get("/messages/{message_id}", this::getAllMessagesByIdHandler);
         app.post("/messages", this::postMessageHandler); 
         // app.patch("/messages/{message_id}", this::patchMessageHandler);
-        // app.delete("/messages/{message_id}", this::deleteMessageHandler);
+        app.delete("/messages/{message_id}", this::deleteMessageHandler);
         return app;
     }
 
@@ -138,12 +138,18 @@ public class SocialMediaController {
     //     }
     // }
     
-    // private void deleteMessageHandler(Context ctx) {
-    //     ctx.json(messageService.deleteMessage()); //add message_text within parenthesis?
+    private void deleteMessageHandler(Context ctx) {
+        int message_id = Integer.parseInt(ctx.pathParam("message_id"));
+        Message message = messageService.deleteMessage(message_id);
+        if (message != null) {
+            ctx.json(message);
+        } else {
+            ctx.json(""); 
+        }
+    }
+    // private void exampleHandler(Context context) {
+    //     context.json("sample text");
     // }
-    // // private void exampleHandler(Context context) {
-    // //     context.json("sample text");
-    // // }
 
 
 }
