@@ -18,8 +18,8 @@ public class MessageService {
         return this.messageDAO.getAllMessages();
     }
 
-    public Message getAllMessagesById() {
-        return this.messageDAO.getAllMessagesById(0);
+    public Message getAllMessagesById(int message_id) {
+        return this.messageDAO.getAllMessagesById(message_id);
     }
 
     public Message addMessage(Message message) {
