@@ -72,7 +72,6 @@ public class SocialMediaController {
     private void getAllMessagesFromUserHandler(Context ctx){
         int posted_id = Integer.parseInt(ctx.pathParam("account_id"));
         List<Message> message = messageService.getAllMessagesFromUser(posted_id);
-        // ctx.json(message);
         if (message != null) {
             ctx.json(message);
         } else {
@@ -146,9 +145,5 @@ public class SocialMediaController {
             ctx.json(""); 
         }
     }
-    // private void exampleHandler(Context context) {
-    //     context.json("sample text");
-    // }
-
 
 }
