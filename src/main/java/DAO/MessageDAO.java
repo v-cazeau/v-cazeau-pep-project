@@ -121,25 +121,23 @@ public class MessageDAO {
 
     //Partially update a Message
 
-    // public Message patchMessage(int posted_by, String message_text, int time_posted_epoch) {
-    //     Connection connection = ConnectionUtil.getConnection();
+    public Message updateMessageById(int message_id, String message_text) {
+        Connection connection = ConnectionUtil.getConnection();
 
-    //     try {
-    //         String sql = "UPDATE message SET posted_by = ?, message_text = ?, time_posted_epoch = ? SET message_id = ?";
-    //         PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        try {
+            String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
-    //         preparedStatement.setInt(1, posted_by);
-    //         preparedStatement.setString(2, message_text);
-    //         preparedStatement.setInt(3, time_posted_epoch);
-    //         preparedStatement.setInt(4, message_id);
+            preparedStatement.setString(1, message_text);
+            preparedStatement.setInt(2, message_id);
 
-    //         preparedStatement.executeUpdate();
-    //         return patchMessage(0, 0, null, 0);
-    //     } catch (SQLException e) {
-    //         System.out.println(e.getMessage());
-    //     }
-    //     return null;
-    // }
+            preparedStatement.executeUpdate();
+            return getAllMessagesById(message_id);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
 
     //Delete a message
     public void deleteMessage(int message_id) {

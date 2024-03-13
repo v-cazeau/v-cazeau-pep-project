@@ -59,7 +59,7 @@ public class SocialMediaController {
         app.get("/messages", this::getAllMessagesHandler);
         app.get("/messages/{message_id}", this::getAllMessagesByIdHandler);
         app.post("/messages", this::postMessageHandler); 
-        // app.patch("/messages/{message_id}", this::patchMessageHandler);
+        app.patch("/messages/{message_id}", this::patchMessageHandler);
         app.delete("/messages/{message_id}", this::deleteMessageHandler);
         return app;
     }
@@ -125,24 +125,17 @@ public class SocialMediaController {
         }
     }
 
-    // private void patchMessageHandler(Context ctx) {
-    //     int messageId = Integer.parseInt(ctx.pathParam("message_id")); //change variable to message_id?
-    //     ObjectMapper mapper = new ObjectMapper(); 
-    //     Map<String, String> updateFields = mapper.readValue(ctx.body(), new TypeReference<Map<String,String>>(){});
-    //     String newMessageText = updateFields.get("message_text");
+    private void patchMessageHandler(Context ctx) {
+        int messageId = Integer.parseInt(ctx.pathParam("message_id")); //change variable to message_id?
+        String newMessageText = ctx.bodyAsClass(Message.class).getMessage_text();
 
-    //     if (newMessageText == null || newMessageText.isBlank() || newMessageText.length() > 255) {
-    //         ctx.status(400);
-    //     }
-        
-    //     Message updatedMessage = messageService.updateMessageTextById(messageId, newMessageText);
-
-    //     if(updatedMessage != null){
-    //         ctx.json(updatedMessage);
-    //     } else {
-    //         ctx.status(400);
-    //     }
-    // }
+        Message updatedMessage = messageService.updateMessage(messageId, newMessageText);
+        if(updatedMessage != null){
+            ctx.json(updatedMessage);
+        } else {
+            ctx.status(400);
+        }
+    }
     
     private void deleteMessageHandler(Context ctx) {
         int message_id = Integer.parseInt(ctx.pathParam("message_id"));

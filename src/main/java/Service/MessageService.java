@@ -28,7 +28,6 @@ public class MessageService {
     }
 
     public Message addMessage(Message message) {
-        // Message existingMessage =  this.messageDAO.postMessage(message);
         if (message.message_text == null) {
             return null; 
         } 
@@ -38,15 +37,13 @@ public class MessageService {
         return this.messageDAO.postMessage(message);
     }
 
-    // public Message updateMessage(int message_id, Message message) {
-    //     Message updated_message = this.messageDAO.getAllMessagesById(message_id);
-    //     if (updated_message != null) {
-    //         this.messageDAO.patchMessage(message_id, message);
-    //         return updated_message;
-    //     } else {
-    //         return null;
-    //     }
-    // }
+    public Message updateMessage(int message_id, String message_text) {
+        Message updated_message = this.messageDAO.getAllMessagesById(message_id);
+        if (updated_message == null || message_text.isBlank() || message_text.length() > 255) {
+            return null;
+        }
+            return this.messageDAO.updateMessageById(message_id, message_text);
+    }
 
     public Message deleteMessage(int message_id) {
         Message message = messageDAO.getAllMessagesById(message_id);
