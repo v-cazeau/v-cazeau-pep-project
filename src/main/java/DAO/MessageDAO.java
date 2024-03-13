@@ -127,4 +127,7 @@ public class MessageDAO {
         }
         return null;
     }
+
+    public void patchMessage(int message_id, Message message) {
+    } //is this needed? this was updated from MessageService to correct patchMessage
 }
