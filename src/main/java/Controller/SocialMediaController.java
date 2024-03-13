@@ -1,4 +1,4 @@
-package Controller;
+  package Controller;
 
 import static org.mockito.Mockito.lenient;
 
@@ -10,6 +10,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Model.Account;
 import Model.Message;
+
+import java.util.*; 
+
 import Service.AccountService;
 import Service.MessageService;
 import io.javalin.Javalin;
@@ -30,6 +33,19 @@ import io.javalin.http.Context;
  *  DELETE localhost:8080/messages/{message_id} : delete message
  */
 public class SocialMediaController {
+    AccountService accountService;
+    MessageService messageService;
+
+    public SocialMediaController() {
+        this.accountService = new AccountService();
+        this.messageService = new MessageService();
+    }
+
+    public SocialMediaController(AccountService accountService, MessageService messageService) {
+        this.accountService = new AccountService();
+        this.messageService = new MessageService();
+    }
+
     /**
      * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
      * suite must receive a Javalin object from this method.
@@ -37,14 +53,14 @@ public class SocialMediaController {
      */
     public Javalin startAPI() {
         Javalin app = Javalin.create();
-        app.get("/accounts/{account_id}", this::getAllMessagesFromUserHandler);
+        // app.get("/accounts/{account_id}", this::getAllMessagesFromUserHandler);
         app.post("/register", this::postAccountHandler);
-        app.post("/login", this::postLoginHandler);
-        app.get("/messages", this::getAllMessagesHandler);
-        app.get("/messages/{message_id}", this::getAllMessagesByIdHandler);
-        app.post("/messages", this::postMessageHandler); 
-        app.patch("/messages/{message_id}", this::patchMessageHandler);
-        app.delete("/messages/{message_id}", this::deleteMessageHandler);
+        // app.post("/login", this::postLoginHandler);
+        // app.get("/messages", this::getAllMessagesHandler);
+        // app.get("/messages/{message_id}", this::getAllMessagesByIdHandler);
+        // app.post("/messages", this::postMessageHandler); 
+        // app.patch("/messages/{message_id}", this::patchMessageHandler);
+        // app.delete("/messages/{message_id}", this::deleteMessageHandler);
         return app;
     }
 
@@ -53,18 +69,17 @@ public class SocialMediaController {
      * @param context The Javalin Context object manages information about both the HTTP request and response.
      */
   
-    private void getAllMessagesFromUserHandler(Context ctx){
-        List<User> users = accountService.getAllMessagesFromUser(); //change to posted_by?
-        ctx.json(users);
-    }
+    // private void getAllMessagesFromUserHandler(Context ctx){
+    //     List<User> users = accountService.getAllMessagesFromUser(); //change to posted_by?
+    //     ctx.json(users);
+    // }
     
-    private void postAccountHandler(Context ctx) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        Account account = mapper.readValue(ctx.body(), Account.class);
-        Account addedAccount = accountService.addAccount(account); 
+    private void postAccountHandler(Context ctx) {
+        Account account = ctx.bodyAsClass(Account.class);
+        Account addedAccount = accountService.insertAccount(account); 
         if(addedAccount != null) {
-            ctx.status(200); 
-        }else{
+            ctx.json(addedAccount); 
+        } else {
             ctx.status(400);
         }
     }
@@ -72,59 +87,59 @@ public class SocialMediaController {
     private void postLoginHandler(Context ctx) throws JsonProcessingException {
         ObjectMapper mapper = new ObjectMapper();
         Account account = mapper.readValue(ctx.body(), Account.class); //would it be add username or no b/c that's within my if statement? My guess is yes add username. 
-        Account addedAccount = accountService.addAccount(account); 
+        Account addedAccount = accountService.insertAccount(account); 
         if(addedAccount == username && password) {
             ctx.status(200); 
-        }else{
+        } else {
             ctx.status(401);
         }
     }
 
-    private void getAllMessagesHandler(Context ctx) {
-        List<Message> messages = messageService.getAllMessages(); //change to message_text?
-        ctx.json(messages);
-    }
-
-    private void getAllMessagesByIdHandler(Context ctx ) {
-        ctx.json(messageService.getAllMessagesById());
-    }
-
-    private void postMessageHandler(Context ctx) {
-        ObjectMapper mapper = new ObjectMapper();
-        Message message = mapper.readValue(ctx.body(), Message.class); //change to message_text?
-        Message addedMessage = messageService.addedMessage(message);
-        if (addedMessage != null) {
-            ctx.status(200);
-        } else {
-            ctx.status(400);
-        }
-    }
-
-    private void patchMessageHandler(Context ctx) {
-        int messageId = Integer.parseInt(ctx.pathParam("message_id")); //change variable to message_id?
-        ObjectMapper mapper = new ObjectMapper(); 
-        Map<String, String> updateFields = mapper.readValue(ctx.body(), new TypeReference<Map<String,String>>(){});
-        String newMessageText = updateFields.get("message_text");
-
-        if (newMessageText == null || newMessageText.isBlank() || newMessageText.length() > 255) {
-            ctx.status(400);
-        }
-        
-        Message updatedMessage = messageService.updateMessageTextById(messageId, newMessageText);
-
-        if(updatedMessage != null){
-            ctx.json(updatedMessage);
-        } else {
-            ctx.status(400);
-        }
-    }
-    
-    private void deleteMessageHandler(Context ctx) {
-        ctx.json(messageService.deleteMessage()); //add message_text within parenthesis?
-    }
-    // private void exampleHandler(Context context) {
-    //     context.json("sample text");
+    // private void getAllMessagesHandler(Context ctx) {
+    //     List<Message> messages = messageService.getAllMessages(); //change to message_text?
+    //     ctx.json(messages);
     // }
+
+    // private void getAllMessagesByIdHandler(Context ctx ) {
+    //     ctx.json(messageService.getAllMessagesById());
+    // }
+
+    // private void postMessageHandler(Context ctx) {
+    //     ObjectMapper mapper = new ObjectMapper();
+    //     Message message = mapper.readValue(ctx.body(), Message.class); //change to message_text?
+    //     Message addedMessage = messageService.addedMessage(message);
+    //     if (addedMessage != null) {
+    //         ctx.status(200);
+    //     } else {
+    //         ctx.status(400);
+    //     }
+    // }
+
+    // private void patchMessageHandler(Context ctx) {
+    //     int messageId = Integer.parseInt(ctx.pathParam("message_id")); //change variable to message_id?
+    //     ObjectMapper mapper = new ObjectMapper(); 
+    //     Map<String, String> updateFields = mapper.readValue(ctx.body(), new TypeReference<Map<String,String>>(){});
+    //     String newMessageText = updateFields.get("message_text");
+
+    //     if (newMessageText == null || newMessageText.isBlank() || newMessageText.length() > 255) {
+    //         ctx.status(400);
+    //     }
+        
+    //     Message updatedMessage = messageService.updateMessageTextById(messageId, newMessageText);
+
+    //     if(updatedMessage != null){
+    //         ctx.json(updatedMessage);
+    //     } else {
+    //         ctx.status(400);
+    //     }
+    // }
+    
+    // private void deleteMessageHandler(Context ctx) {
+    //     ctx.json(messageService.deleteMessage()); //add message_text within parenthesis?
+    // }
+    // // private void exampleHandler(Context context) {
+    // //     context.json("sample text");
+    // // }
 
 
 }

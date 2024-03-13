@@ -52,7 +52,7 @@ public class AccountDAO {
             ResultSet pkeyResultSet = preparedStatement.getGeneratedKeys();
             if(pkeyResultSet.next()) {
                 int generated_account_key = (int) pkeyResultSet.getInt(1);
-                return Account(generated_account_key, account.getUsername());
+                return new Account(generated_account_key, account.getUsername(), account.getPassword());
             }
             
         } catch (SQLException e) {
@@ -60,10 +60,6 @@ public class AccountDAO {
         }
         return null; 
     }
-
-    private Account Account(int generated_account_key, String username) {
-        return null; 
-    } //is this method neccessary? It made line 55 happy again. 
 
 
     //Verify login
@@ -73,7 +69,7 @@ public class AccountDAO {
         Account account = null;
 
         try {
-            String sql = "SELECT account_id, username FROM account WHERE username = ? AND password = ?";
+            String sql = "SELECT * FROM account WHERE username = ? AND password = ?";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
             preparedStatement.setString(1, username);
@@ -84,13 +80,14 @@ public class AccountDAO {
             if(rs.next()) {
                 int accountId = rs.getInt("account_id");
                 String fetchedUsername = rs.getString("username");
-                account = new Account(accountId, fetchedUsername); //need to figure this one out. 
+                String fetchedPassword = rs.getString("password");
+                return account = Account(username); //need to figure this one out. 
             }
 
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return account;
+        return null;
     }
 
 }

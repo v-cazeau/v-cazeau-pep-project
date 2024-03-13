@@ -22,6 +22,12 @@ public class AccountService {
     }
     
     public Account insertAccount(Account account) {
+        if (account.username == null || account.username == "") {
+            return null; 
+        }
+        if (account.password == null || account.password.length() < 4 ) {
+            return null; 
+        }
         return this.accountDAO.postAccount(account);
     }
 
