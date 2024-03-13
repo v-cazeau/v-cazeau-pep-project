@@ -55,7 +55,7 @@ public class SocialMediaController {
         Javalin app = Javalin.create();
         // app.get("/accounts/{account_id}", this::getAllMessagesFromUserHandler);
         app.post("/register", this::postAccountHandler);
-        // app.post("/login", this::postLoginHandler);
+        app.post("/login", this::postLoginHandler);
         // app.get("/messages", this::getAllMessagesHandler);
         // app.get("/messages/{message_id}", this::getAllMessagesByIdHandler);
         // app.post("/messages", this::postMessageHandler); 
@@ -85,11 +85,12 @@ public class SocialMediaController {
     }
 
     private void postLoginHandler(Context ctx) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        Account account = mapper.readValue(ctx.body(), Account.class); //would it be add username or no b/c that's within my if statement? My guess is yes add username. 
-        Account addedAccount = accountService.insertAccount(account); 
-        if(addedAccount == username && password) {
-            ctx.status(200); 
+        // ObjectMapper mapper = new ObjectMapper();
+        // Account account = mapper.readValue(ctx.body(), Account.class); 
+        Account account = ctx.bodyAsClass(Account.class);
+        Account addedAccount = accountService.validateAccount(account); 
+        if(addedAccount != null) {
+            ctx.json(addedAccount).status(200); 
         } else {
             ctx.status(401);
         }

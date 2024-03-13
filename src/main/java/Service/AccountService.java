@@ -32,7 +32,7 @@ public class AccountService {
     }
 
     public Account validateAccount(Account account) {
-        return this.accountDAO.postAccount(account);
+        return this.accountDAO.postLogin(account.username, account.password);
     }
 
     

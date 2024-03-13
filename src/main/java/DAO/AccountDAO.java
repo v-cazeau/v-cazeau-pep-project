@@ -64,9 +64,9 @@ public class AccountDAO {
 
     //Verify login
 
-    private Account postLogin(String username, String password) {
+    public Account postLogin(String username, String password) {
         Connection connection = ConnectionUtil.getConnection(); 
-        Account account = null;
+        // Account account = null;
 
         try {
             String sql = "SELECT * FROM account WHERE username = ? AND password = ?";
@@ -81,7 +81,7 @@ public class AccountDAO {
                 int accountId = rs.getInt("account_id");
                 String fetchedUsername = rs.getString("username");
                 String fetchedPassword = rs.getString("password");
-                return account = Account(username); //need to figure this one out. 
+                return new Account(accountId, fetchedUsername, fetchedPassword); 
             }
 
         } catch (SQLException e) {
